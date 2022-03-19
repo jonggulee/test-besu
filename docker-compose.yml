@@ -1,5 +1,6 @@
-  x-besu-def:
-  &besu-def
+version: '3.6'
+
+x-besu-def: &besu-def
   restart: "on-failure"
   image: hyperledger/besu:${BESU_VERSION:-latest}
   env_file:
@@ -17,7 +18,7 @@
       --rpc-http-api=EEA,WEB3,ETH,NET,TRACE,DEBUG,ADMIN,PRIV,PERM,${BESU_CONS_ALGO:-QBFT} \
       --rpc-ws-api=EEA,WEB3,ETH,NET,TRACE,DEBUG,ADMIN,PRIV,PERM,${BESU_CONS_ALGO:-QBFT} ;
   
-  
+services:
   member1besu:
     << : *besu-def
     environment:
