@@ -9,7 +9,6 @@ x-besu-def: &besu-def
     - /bin/bash
     - -c
     - |
-
       cp "/config/${BESU_CONS_ALGO:-QBFT}genesis.json" /config/genesis.json
 
       /opt/besu/bin/besu \
