@@ -5,7 +5,7 @@ x-besu-def:
   restart: "on-failure"
   image: hyperledger/besu:${BESU_VERSION:-latest}
   env_file:
-    - ./env
+    - ./config/besu/.env
   entrypoint:
     - /bin/bash
     - -c
