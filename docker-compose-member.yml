@@ -1,0 +1,50 @@
+version: '3.6'
+
+x-besu-def:
+  &besu-def
+  restart: "on-failure"
+  image: hyperledger/besu:${BESU_VERSION:-latest}
+  env_file:
+    - ./config/besu/.env
+  entrypoint:
+    - /bin/bash
+    - -c
+    - |
+
+      cp "/config/${BESU_CONS_ALGO:-QBFT}genesis.json" /config/genesis.json
+
+      /opt/besu/bin/besu \
+      --config-file=/config/config.toml \
+      --p2p-host=$$(hostname -i) \
+      --rpc-http-api=EEA,WEB3,ETH,NET,TRACE,DEBUG,ADMIN,PRIV,PERM,${BESU_CONS_ALGO:-QBFT} \
+      --rpc-ws-api=EEA,WEB3,ETH,NET,TRACE,DEBUG,ADMIN,PRIV,PERM,${BESU_CONS_ALGO:-QBFT} ;
+
+services:
+  member1besu:
+    << : *besu-def
+    environment:
+      - OTEL_RESOURCE_ATTRIBUTES=service.name=member1besu,service.version=${BESU_VERSION:-latest}
+      - NODE_ID=6
+    entrypoint:
+      - /bin/bash
+      - -c
+      - |
+        /opt/besu/bin/besu \
+        --config-file=/config/config.toml \
+        --p2p-host=$$(hostname -i) \
+        --privacy-enabled \
+        --privacy-url=http://member1tessera:9101 \
+        --privacy-public-key-file=/opt/besu/keys/tm.pub \
+        --privacy-onchain-groups-enabled=${PRIVACY_ONCHAIN_GROUPS_ENABLED:-false} \
+        --rpc-http-api=EEA,WEB3,ETH,NET,PRIV,PERM,${BESU_CONS_ALGO:-QBFT} \
+        --rpc-ws-api=EEA,WEB3,ETH,NET,PRIV,PERM,${BESU_CONS_ALGO:-QBFT} ;
+    volumes:
+      - ./config/besu/:/config
+      - ./config/nodes/member1:/opt/besu/keys
+      - ./logs/besu:/tmp/besu
+    # depends_on:
+    #   - validator1
+    #   - member1tessera
+    ports:
+      - 20000:8545/tcp
+      - 20001:8546/tcp

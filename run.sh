@@ -16,5 +16,5 @@ echo "--------------------"
 
 
 echo "Starting network..."
-docker-compose build --pull
+# docker-compose build --pull
 docker-compose up --detach
