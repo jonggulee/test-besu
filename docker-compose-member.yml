@@ -4,7 +4,7 @@ x-besu-def:
   &besu-def
   restart: "on-failure"
   image: hyperledger/besu:${BESU_VERSION:-latest}
-  network_mode: host
+  # network_mode: host
   env_file:
     - ./config/besu/.env
   entrypoint:
@@ -16,7 +16,8 @@ x-besu-def:
 
       /opt/besu/bin/besu \
       --config-file=/config/config.toml \
-      --p2p-host=$$(hostname -i) \
+      # --p2p-host=$$(hostname -i) \
+      --p2p-host=172.31.58.129 \
       --rpc-http-api=EEA,WEB3,ETH,NET,TRACE,DEBUG,ADMIN,PRIV,PERM,${BESU_CONS_ALGO:-QBFT} \
       --rpc-ws-api=EEA,WEB3,ETH,NET,TRACE,DEBUG,ADMIN,PRIV,PERM,${BESU_CONS_ALGO:-QBFT} ;
 
