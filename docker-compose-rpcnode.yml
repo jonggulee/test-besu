@@ -32,6 +32,7 @@ services:
     ports:
       - 8545:8545/tcp
       - 8546:8546/tcp
+      - 30303:30303/tcp
 
 
   # member1besu:

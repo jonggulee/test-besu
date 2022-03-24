@@ -24,7 +24,8 @@ services:
     << : *besu-def
     ports:
       - 21001:8545/tcp
-      - 30303
+      - 30303:30303/tcp
+      # - 30303
       - 9545
     environment:
       - OTEL_RESOURCE_ATTRIBUTES=service.name=validator1,service.version=${BESU_VERSION:-latest}
